@@ -4,4 +4,4 @@ owning-sig: sig-node
 stage: alpha
 approvers:
   - "@sig-node-tech-leads"
-latest-milestone: "v1.37"
+latest-milestone: "v1.99"

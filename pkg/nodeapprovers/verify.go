@@ -498,45 +498,73 @@ func VerifyAllTechLeadApprovers(kepsRootDir, ownersAliasesPath string, upcomingM
 	})
 }
 
-// sigReleaseContentsURL is the GitHub API endpoint for listing the releases
-// directory in the kubernetes/sig-release repository.
-const sigReleaseContentsURL = "https://api.github.com/repos/kubernetes/sig-release/contents/releases"
+// k8sTagsURL is the GitHub API endpoint for listing tags in the
+// kubernetes/kubernetes repository. We request 100 tags sorted by version
+// descending so the newest tags come first.
+const k8sTagsURL = "https://api.github.com/repos/kubernetes/kubernetes/tags?per_page=100"
 
-// FetchUpcomingMinor queries the kubernetes/sig-release GitHub repository to
-// determine the upcoming Kubernetes minor version. It lists the release-X.Y
-// directories and returns the highest minor version found.
+// FetchUpcomingMinor queries the kubernetes/kubernetes GitHub repository tags
+// to determine the upcoming Kubernetes minor version. It finds the highest
+// minor version N that has a v1.N.0 or v1.N.0-rc.* tag (meaning that release
+// is done) and returns N+1. If the highest minor only has alpha/beta tags,
+// it is the upcoming release itself.
 func FetchUpcomingMinor() (int, error) {
-	resp, err := http.Get(sigReleaseContentsURL)
+	resp, err := http.Get(k8sTagsURL)
 	if err != nil {
-		return 0, fmt.Errorf("fetching sig-release contents: %w", err)
+		return 0, fmt.Errorf("fetching kubernetes tags: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return 0, fmt.Errorf("fetching sig-release contents: HTTP %d", resp.StatusCode)
+		return 0, fmt.Errorf("fetching kubernetes tags: HTTP %d", resp.StatusCode)
 	}
 
-	var entries []struct {
+	var tags []struct {
 		Name string `json:"name"`
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&entries); err != nil {
-		return 0, fmt.Errorf("decoding sig-release contents: %w", err)
+	if err := json.NewDecoder(resp.Body).Decode(&tags); err != nil {
+		return 0, fmt.Errorf("decoding kubernetes tags: %w", err)
 	}
 
-	maxMinor := 0
-	for _, e := range entries {
-		name := strings.TrimPrefix(e.Name, "release-")
-		if name == e.Name {
-			continue // not a release-X.Y directory
+	// Track which minor versions exist and which are "released" (have
+	// v1.X.0 or v1.X.0-rc.* tags).
+	seen := map[int]bool{}
+	released := map[int]bool{}
+	for _, t := range tags {
+		name := strings.TrimPrefix(t.Name, "v")
+		if name == t.Name {
+			continue // not a vX.Y.Z tag
 		}
-		if minor := parseMilestoneMinor(name); minor > maxMinor {
-			maxMinor = minor
+		minor := parseMilestoneMinor(name)
+		if minor == 0 {
+			continue
+		}
+		seen[minor] = true
+
+		// Check for v1.X.0 or v1.X.0-rc.* — these indicate the release
+		// is done.
+		suffix := strings.TrimPrefix(name, fmt.Sprintf("1.%d.", minor))
+		if suffix == "0" || strings.HasPrefix(suffix, "0-rc.") {
+			released[minor] = true
+		}
+	}
+
+	// Find the highest minor version seen.
+	maxMinor := 0
+	for m := range seen {
+		if m > maxMinor {
+			maxMinor = m
 		}
 	}
 
 	if maxMinor == 0 {
-		return 0, fmt.Errorf("no release-X.Y directories found in sig-release")
+		return 0, fmt.Errorf("no v1.X.Y tags found in kubernetes/kubernetes")
 	}
 
+	// If the highest minor is already released, upcoming is the next one.
+	// Otherwise the highest minor itself is the upcoming release.
+	if released[maxMinor] {
+		return maxMinor + 1, nil
+	}
 	return maxMinor, nil
 }
