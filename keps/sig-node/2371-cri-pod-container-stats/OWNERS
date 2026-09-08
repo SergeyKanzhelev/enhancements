@@ -7,3 +7,4 @@ reviewers:
   - haircommander # sig-node-assigned-reviewer
 
 approvers:
+  - haircommander # sig-node-assigned-approver

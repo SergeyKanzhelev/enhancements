@@ -13,6 +13,7 @@ reviewers:
   - "@mrunalp"      # overall
   - "@ahg-g"        # SIG Scheduling
   - "@SergeyKanzhelev" # sig-node-assigned-reviewer
+  - "@tallclair" # sig-node-assigned-reviewer
 approvers:
   - "@mrunalp"
   - "@thockin"

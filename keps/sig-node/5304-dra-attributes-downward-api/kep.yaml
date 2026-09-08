@@ -10,6 +10,8 @@ reviewers:
   - "@johnbelamaric"
   - "@mortent"
   - "@SergeyKanzhelev"
+  - "@ffromani" # sig-node-assigned-reviewer
+  - "@harche" # sig-node-assigned-reviewer
 approvers:
   - "@mrunalp" # sig-node-assigned-approver
 

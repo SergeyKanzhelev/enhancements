@@ -11,8 +11,10 @@ creation-date: 2026-04-07
 reviewers:
   - "@SergeyKanzhelev"
   - "@aojea"
+  - "@haircommander" # sig-node-assigned-reviewer
 approvers:
   - "@mrunalp"
+  - "@sergeykanzhelev" # sig-node-assigned-approver
 see-also:
   - https://github.com/kubernetes/kubernetes/issues/125599
 replaces: 

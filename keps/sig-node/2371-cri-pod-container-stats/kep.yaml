@@ -15,6 +15,7 @@ reviewers:
   - "@haircommander" # sig-node-assigned-reviewer
 approvers:
   - "@dchen1107"
+  - "@haircommander" # sig-node-assigned-approver
 see-also:
   - N/A
 replaces:

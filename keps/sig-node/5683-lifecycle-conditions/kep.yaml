@@ -16,6 +16,7 @@ reviewers:
 approvers:
   - johnbelamaric
   - mrunalp
+  - "@sergeykanzhelev" # sig-node-assigned-approver
 
 see-also:
   - "/keps/sig-node/5394-psi-node-conditions"

@@ -13,6 +13,7 @@ reviewers:
   - "@aojea"
 approvers:
   - "@mrunalp"
+  - "@sergeykanzhelev" # sig-node-assigned-approver
 see-also:
   - "/keps/sig-node/2727-grpc-probe"
 replaces:

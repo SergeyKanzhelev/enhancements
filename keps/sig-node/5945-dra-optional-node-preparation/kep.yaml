@@ -8,10 +8,12 @@ status: implementable
 creation-date: 2026-05-21
 reviewers:
   - "@mortent"
+  - "@pravk03" # sig-node-assigned-reviewer
 approvers:
   - "@pohly"
   - "@johnbelamaric"
   - "@mrunalp"
+  - "@harche" # sig-node-assigned-approver
 
 # The target maturity stage in the current dev cycle for this KEP.
 stage: alpha

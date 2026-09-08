@@ -11,6 +11,9 @@ status: implementable
 creation-date: 2025-08-25
 approvers:
   - "@dchen1107"
+reviewers:
+  - "@chris" # sig-node-assigned-reviewer
+  - "@haircommander" # sig-node-assigned-reviewer
 replaces: []
 
 # Features and stages

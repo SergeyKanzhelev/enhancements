@@ -9,6 +9,8 @@ status: implementable # provisional|implementable|implemented|deferred|rejected|
 creation-date: 2026-02-01
 reviewers:
   - "@tallclair"
+  - "@fromani" # sig-node-assigned-reviewer
+  - "@ffromani" # sig-node-assigned-reviewer
 approvers:
   - "@mrunalp"
 
